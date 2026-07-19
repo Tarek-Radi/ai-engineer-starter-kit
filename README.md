@@ -1,43 +1,169 @@
 # AI Engineer Starter Kit
 
-A beginner-friendly AI project that retrieves a random quote from an external API and analyzes its sentiment using a Hugging Face pretrained model.
+A growing collection of hands-on AI engineering projects focused on pretrained models, external APIs, model evaluation, reusable inference pipelines, and practical deployment.
 
-This project demonstrates how to combine external data sources with an AI model inside a clean and reproducible Jupyter Notebook.
+This repository documents my progress through an industry-oriented AI engineering roadmap. Each project is organized in its own notebook folder with dedicated documentation, while this root README provides an overview of the complete repository.
 
 ---
 
-## Project Overview
+## Repository Goals
 
-The project retrieves a random quote from the DummyJSON Quotes API.
+The main goals of this repository are to:
 
-The quote is then passed to a Hugging Face sentiment analysis pipeline to determine whether the text expresses a positive or negative sentiment.
+- Learn AI engineering through practical projects.
+- Use pretrained models instead of training everything from scratch.
+- Integrate external APIs with AI workflows.
+- Build clean and reproducible Jupyter Notebooks.
+- Compare models using measurable engineering criteria.
+- Organize inference code into reusable components.
+- Document technical decisions, problems, and solutions.
+- Build portfolio-ready AI projects.
+- Progress toward interactive demos and public deployments.
 
-The project workflow is:
+---
+
+## Current Projects
+
+### 1. Daily Quote Sentiment Analysis
+
+A beginner AI workflow that retrieves a random quote from an external API and analyzes its sentiment using a pretrained Hugging Face model.
+
+#### Workflow
 
 ```text
-External API
-    ↓
-Random Quote
-    ↓
-Hugging Face Sentiment Analysis
-    ↓
+DummyJSON Quotes API
+        ↓
+Random Quote and Author
+        ↓
+Hugging Face Sentiment Pipeline
+        ↓
 Sentiment Label and Confidence Score
+```
+
+#### Main Concepts
+
+- REST API integration
+- HTTP GET requests
+- JSON response handling
+- Hugging Face pipelines
+- Pretrained sentiment models
+- Text inference
+- Error handling
+- Reproducible notebooks
+
+#### Project Location
+
+```text
+notebooks/daily_quote_sentiment/
 ```
 
 ---
 
-## Project Objectives
+### 2. AI Job Post Classifier — Model Selection Benchmark
 
-The main objectives of this project are to:
+An English zero-shot classification project for classifying technical job descriptions into career domains.
 
-- Call an external REST API using Python.
-- Work with JSON responses.
-- Extract specific values from API data.
-- Use a pretrained Hugging Face model.
-- Perform AI inference on text.
-- Display the result clearly.
-- Build a clean and reproducible AI project.
-- Document the project professionally on GitHub.
+The project does not train a custom model from scratch. Instead, it follows a pretrained-first workflow:
+
+```text
+Define the Task
+        ↓
+Search Hugging Face Models
+        ↓
+Read Model Cards
+        ↓
+Shortlist Candidate Models
+        ↓
+Run Inference
+        ↓
+Build an Evaluation Dataset
+        ↓
+Compare Accuracy and Latency
+        ↓
+Select the Best Model
+        ↓
+Build a Gradio Demo
+```
+
+#### Job Categories
+
+- Data Engineering and Data Pipelines
+- Artificial Intelligence and Machine Learning
+- DevOps and Deployment Automation
+- Cloud Infrastructure and Cloud Engineering
+- Cybersecurity and Information Security
+- Software and Application Development
+
+#### Candidate Models
+
+1. `facebook/bart-large-mnli`
+2. `MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli`
+3. `knowledgator/gliclass-small-v1.0-lw`
+
+#### Comparison Criteria
+
+- Classification accuracy
+- Average inference latency
+- Model size
+- Memory requirements
+- Ease of local execution
+- Dependency complexity
+- Ease of deployment
+- Performance on ambiguous job descriptions
+
+#### Current Status
+
+Completed:
+
+- Defined the project problem.
+- Selected six career categories.
+- Created descriptive candidate labels.
+- Shortlisted three pretrained models.
+- Downloaded and loaded `facebook/bart-large-mnli`.
+- Successfully classified an initial Data Engineering job post.
+- Displayed model scores using a Pandas DataFrame.
+- Documented download and Windows cache issues.
+
+In progress:
+
+- Building the evaluation dataset.
+- Testing the first model on all categories.
+- Comparing the remaining candidate models.
+- Measuring accuracy and latency.
+- Selecting the final model.
+- Building the Gradio demo.
+
+#### Project Location
+
+```text
+notebooks/model_scout/
+```
+
+---
+
+## Repository Structure
+
+```text
+ai-engineer-starter-kit/
+│
+├── notebooks/
+│   │
+│   ├── daily_quote_sentiment/
+│   │   ├── daily_quote_sentiment.ipynb
+│   │   └── README.md
+│   │
+│   └── model_scout/
+│       ├── model_scout.ipynb
+│       └── README.md
+│
+├── data/                       # Planned evaluation datasets
+├── results/                    # Planned model comparison outputs
+├── .gitignore
+├── README.md
+└── requirements.txt
+```
+
+The repository structure will expand as the roadmap progresses.
 
 ---
 
@@ -45,96 +171,49 @@ The main objectives of this project are to:
 
 - Python
 - Jupyter Notebook
+- Pandas
 - Requests
 - Hugging Face Transformers
+- Hugging Face Hub
 - PyTorch
-- DummyJSON Quotes API
+- Pretrained NLP Models
+- REST APIs
 - Git
 - GitHub
 
----
+Planned:
 
-## External API
-
-This project uses the DummyJSON Quotes API to retrieve a random quote.
-
-API endpoint:
-
-```text
-https://dummyjson.com/quotes/random
-```
-
-The API returns a JSON response similar to:
-
-```json
-{
-  "id": 1,
-  "quote": "Your heart is the size of an ocean.",
-  "author": "Rumi"
-}
-```
-
-The project extracts the following values:
-
-```python
-quote_text = data["quote"]
-author_name = data["author"]
-```
+- Scikit-learn
+- Gradio
+- Hugging Face Spaces
 
 ---
 
-## Hugging Face Pipeline
+## Key Concepts Demonstrated
 
-The project uses the Hugging Face Transformers library.
+### AI and NLP
 
-The sentiment analysis pipeline is created using:
+- Pretrained models
+- Transformer-based models
+- Inference pipelines
+- Sentiment analysis
+- Zero-shot classification
+- Natural Language Inference
+- Candidate-label design
+- Confidence scores
+- Model evaluation
+- Accuracy and latency trade-offs
 
-```python
-from transformers import pipeline
+### Software and Engineering Practices
 
-sentiment_analyzer = pipeline("sentiment-analysis")
-```
-
-The quote is then passed to the model:
-
-```python
-result = sentiment_analyzer(quote_text)
-```
-
-The model returns a result similar to:
-
-```python
-[
-    {
-        "label": "POSITIVE",
-        "score": 0.9987
-    }
-]
-```
-
-The label represents the predicted sentiment, while the score represents the confidence of the model.
-
----
-
-## Project Structure
-
-```text
-ai-engineer-starter-kit/
-│
-├── notebooks/
-│   └── daily_quote_sentiment.ipynb
-│
-├── .gitignore
-├── README.md
-└── requirements.txt
-```
-
-### File Description
-
-- `README.md`: Contains the project documentation.
-- `requirements.txt`: Contains the required Python libraries.
-- `.gitignore`: Prevents unnecessary files from being uploaded.
-- `notebooks/daily_quote_sentiment.ipynb`: Contains the full project implementation.
+- Virtual environments
+- Dependency management
+- Modular project organization
+- Error handling
+- Git version control
+- GitHub documentation
+- Reproducible notebooks
+- Technical decision documentation
 
 ---
 
@@ -144,11 +223,6 @@ ai-engineer-starter-kit/
 
 ```bash
 git clone https://github.com/Tarek-Radi/ai-engineer-starter-kit.git
-```
-
-Move into the project directory:
-
-```bash
 cd ai-engineer-starter-kit
 ```
 
@@ -160,33 +234,34 @@ python -m venv .venv
 
 ### 3. Activate the Virtual Environment
 
-On Windows PowerShell:
+#### Windows PowerShell
 
 ```powershell
-.venv\Scripts\Activate.ps1
+.\.venv\Scripts\Activate.ps1
 ```
 
-On Windows Command Prompt:
+#### Windows Command Prompt
 
 ```cmd
 .venv\Scripts\activate
 ```
 
-On Linux or macOS:
+#### Linux or macOS
 
 ```bash
 source .venv/bin/activate
 ```
 
-### 4. Install the Required Libraries
+### 4. Install the Dependencies
 
 ```bash
+python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```
 
 ---
 
-## How to Run the Project
+## Running the Notebooks
 
 Start Jupyter Notebook:
 
@@ -194,21 +269,25 @@ Start Jupyter Notebook:
 jupyter notebook
 ```
 
-Open:
+Then open one of the project notebooks:
 
 ```text
-notebooks/daily_quote_sentiment.ipynb
+notebooks/daily_quote_sentiment/daily_quote_sentiment.ipynb
 ```
 
-Then run all cells from top to bottom.
+or:
 
-In VS Code, make sure that the selected Notebook Kernel uses the project virtual environment:
+```text
+notebooks/model_scout/model_scout.ipynb
+```
+
+In VS Code, select the Python kernel associated with the repository virtual environment:
 
 ```text
 .venv
 ```
 
-The Python executable should point to a path similar to:
+The interpreter path should look similar to:
 
 ```text
 ai-engineer-starter-kit\.venv\Scripts\python.exe
@@ -216,138 +295,106 @@ ai-engineer-starter-kit\.venv\Scripts\python.exe
 
 ---
 
-## Example Output
+## Reproducibility Checklist
 
-```text
-Quote:
-The only limit to our realization of tomorrow is our doubts of today.
+Before committing a notebook:
 
-Author:
-Franklin D. Roosevelt
+1. Save the notebook.
+2. Restart the kernel.
+3. Run all cells from top to bottom.
+4. Confirm that no hidden state is required.
+5. Review the outputs.
+6. Remove private information or tokens.
+7. Update the project README.
+8. Commit the working version to Git.
 
-Sentiment:
-POSITIVE
-
-Confidence:
-99.87%
-```
-
----
-
-## Main Code Workflow
-
-The API request is sent using:
-
-```python
-response = requests.get(url, timeout=10)
-```
-
-The JSON response is converted into a Python dictionary:
-
-```python
-data = response.json()
-```
-
-The quote and author are extracted:
-
-```python
-quote_text = data["quote"]
-author_name = data["author"]
-```
-
-The quote is analyzed using the Hugging Face model:
-
-```python
-result = sentiment_analyzer(quote_text)
-```
-
-The final result is displayed using:
-
-```python
-print(f"Quote: {quote_text}")
-print(f"Author: {author_name}")
-print(f"Sentiment: {result[0]['label']}")
-print(f"Confidence: {result[0]['score']:.2%}")
-```
-
----
-
-## Error Handling
-
-The API request includes a timeout to prevent the notebook from waiting indefinitely:
-
-```python
-response = requests.get(url, timeout=10)
-```
-
-The project also checks whether the API request was successful:
-
-```python
-response.raise_for_status()
-```
-
-This raises an error when the API returns an unsuccessful status code.
-
-Examples include:
-
-- `404`: The requested resource was not found.
-- `500`: The API server experienced an internal error.
-- `Timeout`: The server did not respond within the specified time.
-- `ConnectionError`: The application could not connect to the API.
-
----
-
-## Reproducibility
-
-The notebook is designed to run from top to bottom without errors.
-
-Before submission, the notebook should be tested using:
+Recommended notebook test:
 
 ```text
 Restart Kernel
-Clear All Outputs
-Run All
-```
-
-The project does not require a private API key.
-
-All required dependencies are included in:
-
-```text
-requirements.txt
+→ Run All Cells
+→ Verify Outputs
+→ Save
+→ Commit
 ```
 
 ---
 
-## Key Concepts Demonstrated
+## Important Development Lessons
 
-This project demonstrates several important AI engineering concepts:
+Several practical issues were encountered during development:
 
-- REST API integration
-- HTTP GET requests
-- JSON data handling
-- Text preprocessing
-- Pretrained models
-- Hugging Face pipelines
-- AI inference
-- Virtual environments
-- Dependency management
-- GitHub documentation
-- Reproducible notebooks
+### Hugging Face Model Downloads
+
+Large model repositories may contain weights for multiple frameworks. Downloading an entire repository can use unnecessary disk space.
+
+For BART, a selective download was used to retrieve only the required configuration, tokenizer, and SafeTensors files.
+
+### Windows Hugging Face Cache
+
+Windows may display symlink warnings when Developer Mode is disabled. The cache still works, but it may consume more disk space.
+
+### Interrupted Downloads
+
+Interrupted model downloads can leave incomplete files in the Hugging Face cache. These may need to be removed before retrying.
+
+### Notebook Saving
+
+Notebook changes must be saved before moving or renaming files. Unsaved cells may be lost because file operations only move the latest version stored on disk.
+
+### Version Control
+
+Frequent commits reduce the risk of losing notebook work and make it easier to restore earlier versions.
 
 ---
 
-## Future Improvements
+## Roadmap
 
-Possible future improvements include:
+### Completed
 
-- Analyzing multiple quotes.
-- Saving the results to a CSV file.
-- Adding neutral sentiment classification.
-- Creating a Streamlit user interface.
-- Comparing multiple sentiment analysis models.
-- Adding charts for sentiment results.
-- Deploying the project as a web application.
+- External API integration
+- JSON handling
+- Pretrained sentiment inference
+- Initial zero-shot model research
+- Hugging Face model-card analysis
+- First zero-shot job classification
+- Basic Pandas result presentation
+
+### In Progress
+
+- Balanced evaluation dataset
+- Multi-model comparison
+- Accuracy measurement
+- Latency benchmarking
+- Reusable inference module
+- Gradio demo
+
+### Planned
+
+- Hugging Face Spaces deployment
+- More pretrained model tasks
+- Image inference
+- Audio inference
+- Model-serving fundamentals
+- RAG systems
+- AI agents
+- Evaluation and observability
+
+---
+
+## Expected Model Scout Deliverables
+
+The Job Post Classifier project is expected to produce:
+
+- A labeled evaluation dataset
+- Three evaluated pretrained models
+- Accuracy and latency measurements
+- A model comparison table
+- A clearly justified winning model
+- A reusable inference module
+- A Gradio web interface
+- A public Hugging Face Space
+- A final model selection report
 
 ---
 
@@ -361,6 +408,7 @@ Engineering student interested in:
 - Artificial Intelligence
 - Cloud Computing
 - AI-powered Data Systems
+- Practical AI Engineering
 
 GitHub: [Tarek-Radi](https://github.com/Tarek-Radi)
 
@@ -368,4 +416,6 @@ GitHub: [Tarek-Radi](https://github.com/Tarek-Radi)
 
 ## License
 
-This project is created for educational purposes.
+This repository is currently intended for educational and portfolio purposes.
+
+Individual pretrained models, datasets, APIs, and libraries used by the projects remain subject to their own licenses and terms of use.
