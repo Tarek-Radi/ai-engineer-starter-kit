@@ -1,0 +1,13 @@
+job_description,expected_category
+"We need an engineer to build ETL pipelines using Python, SQL, Airflow, dbt, and Spark.","data engineering and data pipelines"
+"Design dimensional models, maintain data warehouses, and optimize batch ingestion workflows.","data engineering and data pipelines"
+"Build machine learning models for text classification and deploy NLP inference services.","artificial intelligence and machine learning"
+"Develop RAG systems using embeddings, vector databases, and large language models.","artificial intelligence and machine learning"
+"Manage Kubernetes clusters, automate CI/CD pipelines, and improve deployment reliability.","devops and deployment automation"
+"Create automated release pipelines using Docker, Jenkins, and infrastructure monitoring tools.","devops and deployment automation"
+"Design scalable AWS infrastructure using EC2, S3, IAM, and cloud networking services.","cloud infrastructure and cloud engineering"
+"Build secure Azure cloud environments and manage virtual networks, storage, and compute resources.","cloud infrastructure and cloud engineering"
+"Monitor security events using SIEM tools and investigate suspicious network activity.","cybersecurity and information security"
+"Perform vulnerability assessments, threat detection, and incident response across enterprise systems.","cybersecurity and information security"
+"Develop backend applications using Java, REST APIs, databases, and software design patterns.","software and application development"
+"Build and maintain web applications using Python, Django, APIs, and relational databases.","software and application development"
