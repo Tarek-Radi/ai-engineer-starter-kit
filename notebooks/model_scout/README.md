@@ -1,10 +1,22 @@
 # AI Job Post Classifier — Model Selection Benchmark
 
+## Live Demo
+
+Hugging Face Space:
+
+https://huggingface.co/spaces/TarekRadii/model-scout-comparison
+
+Direct application:
+
+https://tarekradii-model-scout-comparison.hf.space
+
+---
+
 ## Overview
 
-This project evaluates pretrained zero-shot classification models for classifying English technical job posts into predefined career categories.
+This project evaluates three pretrained zero-shot classification models for classifying English technical job posts into predefined career categories.
 
-The goal is not to train a model from scratch. Instead, the project follows a pretrained-first workflow:
+The goal is not to train or fine-tune a model. Instead, the project follows a pretrained-first workflow:
 
 ```text
 Define a real classification task
@@ -13,14 +25,18 @@ Search for suitable pretrained models
         ↓
 Read and compare model cards
         ↓
-Run the same evaluation dataset through multiple models
+Evaluate every model on the same dataset
         ↓
-Compare accuracy, latency, model size, and deployment complexity
+Measure accuracy, confidence, latency, and cost
         ↓
-Select the best model based on engineering trade-offs
+Compare engineering trade-offs
         ↓
-Build and publish an interactive Gradio demo
+Select a practical winner
+        ↓
+Publish an interactive Gradio dashboard
 ```
+
+The main skill demonstrated by this project is engineering judgment: selecting a model based on measurable quality, speed, cost, and deployability rather than choosing a model by popularity alone.
 
 ---
 
@@ -54,7 +70,7 @@ Data Engineering and Data Pipelines
 
 ## Candidate Labels
 
-The project uses descriptive labels because zero-shot models rely on the semantic meaning of each label.
+Zero-shot classification depends on the semantic meaning of the candidate labels, so the project uses descriptive labels instead of short names such as `AI`, `Cloud`, or `Software`.
 
 ```python
 candidate_labels = [
@@ -67,54 +83,36 @@ candidate_labels = [
 ]
 ```
 
-Using descriptive labels is usually more reliable than using short labels such as `AI`, `Cloud`, or `Software`.
-
 ---
 
-## Candidate Models
+## Evaluated Models
 
-The shortlist contains three pretrained zero-shot classification models:
-
-1. `facebook/bart-large-mnli`
-2. `MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli`
-3. `knowledgator/gliclass-small-v1.0-lw`
-
-| Model | Role in Evaluation | Expected Strength |
+| Model | Hugging Face Model ID | Role |
 |---|---|---|
-| BART Large MNLI | Baseline | Strong and widely used English zero-shot classifier |
-| DeBERTa v3 Base | Accuracy candidate | Strong NLI performance and potentially better classification quality |
-| GLiClass Small | Efficiency candidate | Smaller, faster, and easier to deploy |
+| BART Large MNLI | `facebook/bart-large-mnli` | Strong and widely used zero-shot baseline |
+| DeBERTa v3 Base | `MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli` | Accuracy-focused candidate |
+| ModernBERT Base NLI | `tasksource/ModernBERT-base-nli` | Speed and efficiency candidate |
 
-The final model will be selected only after all candidates are evaluated on the same dataset.
+All three models were tested using the same candidate labels and the same evaluation dataset.
 
 ---
 
 ## Evaluation Dataset
 
-The models are evaluated using the same manually prepared dataset of English technical job descriptions.
+The benchmark uses a manually prepared CSV file containing English technical job descriptions and their expected categories.
 
-### Current Dataset Size
+### Dataset Size
 
 ```text
 12 job descriptions
 2 examples per category
+6 categories
 ```
 
-This dataset is suitable for an initial benchmark, but it will be expanded before the final evaluation.
-
-### Planned Final Dataset
-
-- Data Engineering: 5–10 examples
-- Artificial Intelligence and Machine Learning: 5–10 examples
-- DevOps: 5–10 examples
-- Cloud Engineering: 5–10 examples
-- Cybersecurity: 5–10 examples
-- Software Development: 5–10 examples
-
-Expected final size:
+### Dataset Schema
 
 ```text
-30–60 job descriptions
+job_description, expected_category
 ```
 
 ### Dataset Location
@@ -123,81 +121,127 @@ Expected final size:
 notebooks/model_scout/data/job_posts_evaluation.csv
 ```
 
----
+Example:
 
-## Evaluation Metrics
-
-The following metrics are recorded for each model:
-
-- Accuracy
-- Average inference latency
-- Total evaluation time
-- Average confidence
-- Model size
-- Memory requirements
-- CPU performance
-- Ease of local execution
-- Ease of deployment
-- Dependency complexity
-- Error cases and ambiguous predictions
-- Local or hosted inference cost
-
----
-
-## Current Progress
-
-### Completed
-
-- Defined the project idea.
-- Selected six job categories.
-- Created descriptive candidate labels.
-- Shortlisted three pretrained models.
-- Downloaded `facebook/bart-large-mnli`.
-- Loaded BART locally using Hugging Face Transformers.
-- Created an evaluation CSV file.
-- Evaluated BART on 12 job descriptions.
-- Measured prediction confidence and inference latency.
-- Added predicted labels and correctness flags to a Pandas DataFrame.
-- Created a separate notebook for DeBERTa evaluation.
-- Prepared the second candidate model for testing.
-- Documented model-download, cache, and notebook-organization issues.
-
-### In Progress
-
-- Evaluating DeBERTa on the same dataset.
-- Recording DeBERTa accuracy, confidence, and latency.
-- Preparing the third model evaluation.
-- Expanding the evaluation dataset.
-- Building the final comparison table.
-
----
-
-## BART Baseline Result
-
-The first completed benchmark used:
-
-```text
-facebook/bart-large-mnli
+```csv
+job_description,expected_category
+"We need an engineer to build ETL pipelines using Python, SQL, Airflow, dbt, and Spark.","data engineering and data pipelines"
 ```
 
-### Preliminary Result
+---
+
+## Evaluation Methodology
+
+Each model receives:
+
+- The same 12 job descriptions
+- The same six candidate labels
+- `multi_label=False`
+- The same expected categories
+- The same evaluation logic
+
+For every prediction, the project records:
+
+- Predicted category
+- Confidence score
+- Inference latency
+- Whether the prediction is correct
+
+Before accuracy is calculated, expected and predicted labels are normalized using lowercase text and whitespace removal. This prevents formatting differences such as the following from being counted as errors:
 
 ```text
-Correct predictions: 11
-Wrong predictions: 1
-Total examples: 12
-Accuracy: 91.67%
+Data Engineering and Data Pipelines
+data engineering and data pipelines
 ```
 
-This is a preliminary result because the evaluation dataset is still small.
+### Accuracy
 
-A high score on 12 examples is encouraging, but it is not sufficient for a final model-selection decision. The dataset will be expanded to provide a more reliable comparison.
+```text
+Accuracy = Correct Predictions / Total Examples
+```
+
+### Average Latency
+
+```text
+Average Latency = Total Inference Time / Number of Examples
+```
+
+### Cost
+
+All models were executed locally using open pretrained weights.
+
+```text
+API cost: $0.00
+Cost description: Free — local inference
+```
 
 ---
 
-## Initial Inference Workflow
+## Benchmark Results
 
-The BART model is loaded using the Hugging Face Transformers pipeline:
+| Model | Accuracy | Correct | Wrong | Average Latency | Average Confidence | Cost |
+|---|---:|---:|---:|---:|---:|---:|
+| BART Large MNLI | 91.67% | 11 | 1 | Stored in final comparison CSV | Stored in final comparison CSV | $0.00 |
+| DeBERTa v3 Base | 91.67% | 11 | 1 | 0.2268 s | 78.77% | $0.00 |
+| ModernBERT Base NLI | 83.33% | 10 | 2 | 0.0977 s | 41.82% | $0.00 |
+
+The complete comparison is stored in:
+
+```text
+notebooks/model_scout/data/final_result_of_comparison.csv
+```
+
+The deployed Gradio dashboard reads this CSV directly and displays the latest recorded values.
+
+---
+
+## Selected Model
+
+### Current Winner: BART Large MNLI
+
+BART and DeBERTa achieved the same accuracy:
+
+```text
+91.67%
+```
+
+The dashboard ranks models using:
+
+1. Higher accuracy
+2. Lower latency as the tie-breaker
+
+Under this ranking strategy, BART is displayed as the current winner.
+
+### Engineering Trade-off
+
+- **BART** provides the best current balance under the accuracy-first ranking.
+- **DeBERTa** achieved the same accuracy and the highest recorded average confidence among the fully measured candidates.
+- **ModernBERT** was the fastest model at approximately `0.0977` seconds per prediction, but its accuracy was lower.
+
+This demonstrates why model selection should not rely on one metric alone.
+
+---
+
+## Error Analysis
+
+ModernBERT correctly classified 10 of the 12 examples.
+
+Its two incorrect predictions involved categories with overlapping technical language:
+
+1. A RAG-related role was predicted as Software Development instead of Artificial Intelligence and Machine Learning.
+2. A secure Azure environment role was predicted as Cybersecurity instead of Cloud Infrastructure and Cloud Engineering.
+
+These errors show that categories such as:
+
+- AI vs. Software Development
+- Cloud vs. Cybersecurity
+- Cloud vs. DevOps
+
+can overlap semantically and require a larger, more diverse evaluation dataset.
+
+---
+
+## Inference Example
 
 ```python
 from transformers import pipeline
@@ -208,29 +252,20 @@ classifier = pipeline(
     task="zero-shot-classification",
     model=MODEL_NAME
 )
-```
 
-A job description is classified using:
-
-```python
 result = classifier(
-    job_description,
+    "Build ETL pipelines using Airflow, dbt, Spark, and PostgreSQL.",
     candidate_labels=candidate_labels,
     multi_label=False
 )
+
+print(result["labels"][0])
+print(result["scores"][0])
 ```
-
-The returned result contains:
-
-- `sequence`: the original job description
-- `labels`: candidate categories ordered from highest to lowest score
-- `scores`: confidence scores corresponding to each category
 
 ---
 
-## Batch Evaluation Workflow
-
-Each job description is passed through the model while measuring inference latency.
+## Batch Evaluation Example
 
 ```python
 import time
@@ -255,203 +290,55 @@ for job_description in evaluation_df["job_description"]:
     latencies.append(latency)
 ```
 
-The results are then added to the evaluation DataFrame:
+The predictions are then compared with the expected categories:
 
 ```python
 evaluation_df["predicted_category"] = predictions
 evaluation_df["confidence_percent"] = confidences
 evaluation_df["latency_seconds"] = latencies
 
-evaluation_df["is_correct"] = (
+evaluation_df["expected_normalized"] = (
     evaluation_df["expected_category"]
-    == evaluation_df["predicted_category"]
+    .astype(str)
+    .str.strip()
+    .str.lower()
+)
+
+evaluation_df["predicted_normalized"] = (
+    evaluation_df["predicted_category"]
+    .astype(str)
+    .str.strip()
+    .str.lower()
+)
+
+evaluation_df["is_correct"] = (
+    evaluation_df["expected_normalized"]
+    == evaluation_df["predicted_normalized"]
 )
 ```
 
 ---
 
-## Result Display
+## Gradio Dashboard
 
-The benchmark output includes:
+The project includes a Gradio application that reads the final comparison CSV and presents:
 
-```text
-job_description
-expected_category
-predicted_category
-confidence_percent
-latency_seconds
-is_correct
-```
+- Accuracy winner
+- Fastest model
+- Number of evaluated models
+- Accuracy comparison
+- Latency comparison
+- Average confidence comparison
+- Correct and incorrect prediction counts
+- Cost information
+- Recommended model
+- Downloadable comparison table
 
-Example:
-
-```python
-evaluation_df[
-    [
-        "job_description",
-        "expected_category",
-        "predicted_category",
-        "confidence_percent",
-        "latency_seconds",
-        "is_correct",
-    ]
-]
-```
-
-Incorrect predictions can be inspected separately:
-
-```python
-evaluation_df[
-    evaluation_df["is_correct"] == False
-]
-```
+The application is deployed publicly on Hugging Face Spaces.
 
 ---
 
-## Planned Comparison Table
-
-| Model | Accuracy | Average Latency | Average Confidence | Model Size | Cost | Deployment Complexity |
-|---|---:|---:|---:|---:|---|---|
-| BART Large MNLI | 91.67% preliminary | To be recorded | To be recorded | Large | Local compute only | Medium |
-| DeBERTa v3 Base | In progress | In progress | In progress | Medium | Local compute only | Medium |
-| GLiClass Small | Not tested yet | Not tested yet | Not tested yet | Small | Local compute only | To be evaluated |
-
-The final winner will not necessarily be the model with the highest accuracy.
-
-The decision will also consider:
-
-- Latency
-- Model size
-- Memory usage
-- CPU performance
-- Ease of installation
-- Ease of deployment
-- Dependency complexity
-- Accuracy on ambiguous job descriptions
-
----
-
-## Problems Encountered
-
-### 1. Slow BART Model Download
-
-The `facebook/bart-large-mnli` model requires downloading a large weight file.
-
-The main `model.safetensors` file is approximately 1.63 GB. The initial download appeared to remain frozen for long periods during file reconstruction.
-
-### 2. Hugging Face Xet Reconstruction Issue
-
-The Hugging Face CLI used the `hf-xet` download system.
-
-Example output:
-
-```text
-Reconstructing: 7.01 MB / 1.63 GB at approximately 13.2 kB/s
-```
-
-The network download was acceptable, but local reconstruction was slow on Windows.
-
-### 3. Unauthenticated Hugging Face Requests
-
-The Hub displayed:
-
-```text
-You are sending unauthenticated requests to the HF Hub.
-```
-
-The warning did not stop the download, but authentication may improve rate limits.
-
-### 4. Windows Symlink Warning
-
-The Hugging Face cache displayed a warning because Windows symlink support was not enabled.
-
-Possible solutions:
-
-- Enable Windows Developer Mode.
-- Run the terminal as administrator.
-- Continue without symlinks if sufficient disk space is available.
-
-### 5. Downloading the Entire Repository
-
-Running:
-
-```powershell
-hf download facebook/bart-large-mnli
-```
-
-attempted to download unnecessary framework files.
-
-A selective download was used instead:
-
-```powershell
-hf download facebook/bart-large-mnli `
-  config.json `
-  model.safetensors `
-  tokenizer.json `
-  tokenizer_config.json `
-  vocab.json `
-  merges.txt `
-  special_tokens_map.json
-```
-
-### 6. Partial Download Cleanup
-
-Interrupted downloads created incomplete cache files at:
-
-```text
-C:\Users\user\.cache\huggingface\hub\models--facebook--bart-large-mnli
-```
-
-Incomplete files needed to be removed before retrying.
-
-### 7. Notebook File Organization Issue
-
-The notebooks were moved into dedicated folders.
-
-```text
-notebooks/
-├── daily_quote_sentiment/
-│   ├── daily_quote_sentiment.ipynb
-│   └── README.md
-└── model_scout/
-    ├── model_scout.ipynb
-    ├── DeBERTa.ipynb
-    ├── data/
-    │   └── job_posts_evaluation.csv
-    └── README.md
-```
-
-An unsaved notebook appeared empty after moving because the latest cells had not been saved to disk.
-
-### 8. Independent Notebook State
-
-The DeBERTa evaluation uses a separate notebook.
-
-Each notebook has its own kernel state, so variables such as:
-
-```text
-candidate_labels
-evaluation_df
-deberta_classifier
-```
-
-must be defined again.
-
-### 9. Repeated Evaluation Lists
-
-If an evaluation loop is executed more than once without resetting the result lists, predictions may be duplicated.
-
-```python
-deberta_predictions = []
-deberta_confidences = []
-deberta_latencies = []
-```
-
-These lists should be reset before each new run.
-
----
-
-## Current Project Structure
+## Project Structure
 
 ```text
 ai-engineer-starter-kit/
@@ -459,72 +346,174 @@ ai-engineer-starter-kit/
 │   ├── daily_quote_sentiment/
 │   │   ├── daily_quote_sentiment.ipynb
 │   │   └── README.md
+│   │
 │   └── model_scout/
-│       ├── model_scout.ipynb
+│       ├── app.py
+│       ├── BART Model.ipynb
 │       ├── DeBERTa.ipynb
-│       ├── data/
-│       │   └── job_posts_evaluation.csv
-│       └── README.md
+│       ├── ModernBERT.ipynb
+│       ├── README.md
+│       └── data/
+│           ├── job_posts_evaluation.csv
+│           └── final_result_of_comparison.csv
+│
 ├── requirements.txt
 ├── .gitignore
 └── README.md
 ```
 
-### Planned Additions
+The evaluation notebooks are kept separate because each notebook has its own kernel state and model-specific workflow.
+
+---
+
+## Local Installation
+
+Create and activate a virtual environment:
+
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+```
+
+Install the required packages:
+
+```powershell
+pip install -r requirements.txt
+```
+
+For the deployed comparison dashboard, the minimum dependencies are:
 
 ```text
-results/
-└── model_comparison.csv
+gradio
+pandas
+```
 
-inference.py
-app.py
-evaluate.py
+The model-evaluation notebooks also use:
+
+```text
+torch
+transformers
+huggingface_hub
 ```
 
 ---
 
-## Next Steps
+## Run the Gradio Application Locally
 
-1. Complete the DeBERTa evaluation.
-2. Record DeBERTa accuracy, latency, and average confidence.
-3. Inspect DeBERTa error cases.
-4. Evaluate `knowledgator/gliclass-small-v1.0-lw`.
-5. Expand the dataset from 12 to at least 30 examples.
-6. Re-run all three models on the expanded dataset.
-7. Save the benchmark results in a comparison table.
-8. Analyze ambiguous and incorrect predictions.
-9. Select the final model using practical trade-offs.
-10. Create a reusable `inference.py` module.
-11. Build a Gradio demo.
-12. Deploy the demo on Hugging Face Spaces.
-13. Add the public Space link to this README.
-14. Update the root repository README.
+From the repository root:
+
+```powershell
+python notebooks/model_scout/app.py
+```
+
+The application will be available locally at:
+
+```text
+http://127.0.0.1:7860
+```
 
 ---
 
-## Final Expected Deliverables
+## Deployment
 
-- Public GitHub repository
-- Clean project README
-- Model-card comparison
-- Evaluation dataset
+The dashboard is deployed on Hugging Face Spaces using:
+
+```text
+SDK: Gradio
+Application file: app.py
+Comparison data: data/final_result_of_comparison.csv
+```
+
+The deployment Space contains:
+
+```text
+app.py
+requirements.txt
+README.md
+data/
+└── final_result_of_comparison.csv
+```
+
+The deployed dashboard does not run the three large models. It displays the benchmark results already saved in the comparison CSV, which keeps deployment lightweight and avoids unnecessary runtime cost.
+
+---
+
+## Model Cards and Responsible Use
+
+Before evaluation, each candidate model should be reviewed through its Hugging Face model card.
+
+Important information includes:
+
+- Intended use
+- Base model
+- Training datasets
+- Supported languages
+- License
+- Limitations
+- Biases
+- Evaluation results
+- Deployment requirements
+
+This project is educational and intended for technical job-post categorization.
+
+It should not be used as the sole basis for:
+
+- Hiring decisions
+- Candidate rejection
+- Employee assessment
+- Other high-impact employment decisions
+
+Human review is required when classification results may affect real people.
+
+---
+
+## Limitations
+
+- The current dataset contains only 12 examples.
+- Each category has only two examples.
+- Confidence scores from different models are not always directly calibrated.
+- Latency depends on the hardware, installed libraries, cache state, and whether CPU or GPU is used.
+- Technical job descriptions often contain skills from more than one category.
+- The current benchmark evaluates single-label classification only.
+- Results should be re-evaluated on a larger and more diverse dataset before production use.
+
+---
+
+## Future Improvements
+
+- Expand the evaluation dataset to 30–60 job descriptions.
+- Add more ambiguous and mixed-domain examples.
+- Record model download size and memory usage.
+- Add macro F1-score and a confusion matrix.
+- Test CPU-only deployment performance.
+- Add automated benchmark scripts.
+- Add per-category accuracy.
+- Add model-card comparison notes.
+- Add an optional live classification interface.
+- Re-run the benchmark after dataset expansion.
+
+---
+
+## Final Deliverables
+
 - Three evaluated pretrained models
+- Shared evaluation dataset
 - Accuracy comparison
 - Latency comparison
-- Cost and deployment comparison
+- Confidence comparison
+- Cost comparison
 - Error analysis
-- Selected model with clear justification
-- Reusable inference module
-- Gradio web demo
-- Public Hugging Face Space link
+- Final comparison CSV
+- Selected model with engineering rationale
+- Interactive Gradio dashboard
+- Public Hugging Face Space
+- Documented project workflow
 
 ---
 
-## Key Learning Objective
+## Key Learning Outcome
 
-The main learning objective of this project is not simply to run a pretrained model.
-
-The project demonstrates the complete applied AI workflow:
+This project demonstrates the complete applied AI model-selection workflow:
 
 ```text
 Define Task
@@ -534,8 +523,11 @@ Define Task
 → Build Evaluation Dataset
 → Measure Accuracy and Latency
 → Compare Engineering Trade-offs
-→ Select the Best Model
-→ Build and Deploy a Demo
+→ Select a Model
+→ Build a Demo
+→ Deploy Publicly
 ```
 
-The most important skill demonstrated by this project is engineering judgment: selecting the model that provides the best practical balance between quality, speed, cost, and deployability.
+The most important result is not simply identifying the highest-scoring model.
+
+The project demonstrates how to make and justify a practical engineering decision using measurable evidence.

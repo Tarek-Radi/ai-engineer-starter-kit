@@ -521,7 +521,7 @@ with gr.Blocks(css=CSS, title="Model Scout Comparison") as demo:
     gr.HTML(
         """
         <section class="hero">
-            <h1>Model Scout Comparison</h1>
+            <h1>Model Scout Comparison -Tarek Rady</h1>
             <p>
                 A side-by-side benchmark of pretrained zero-shot
                 classification models for technical job-post classification.
@@ -564,7 +564,4 @@ with gr.Blocks(css=CSS, title="Model Scout Comparison") as demo:
 
 
 if __name__ == "__main__":
-    demo.launch(
-        share=True,
-        inbrowser=True,
-    )
+    demo.launch()
