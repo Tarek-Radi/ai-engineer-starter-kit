@@ -1,0 +1,2 @@
+model_name,model_id,accuracy,average_latency_seconds,cost_usd,cost_description,correct_predictions,wrong_predictions,total_examples
+ModernBERT,tasksource/ModernBERT-base-nli,0.8333,0.0977,0.0,Free - Local inference,10,2,12
