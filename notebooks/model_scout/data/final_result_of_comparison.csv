@@ -1,2 +1,4 @@
-model_name,model_id,accuracy,average_latency_seconds,cost_usd,cost_description,correct_predictions,wrong_predictions,total_examples
-ModernBERT,tasksource/ModernBERT-base-nli,0.8333,0.0977,0.0,Free - Local inference,10,2,12
+model_name,model_id,accuracy_percent,average_latency_seconds,average_confidence_percent,cost_usd,cost_description,correct_predictions,wrong_predictions,total_examples
+DeBERTa,MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli,91.67,0.2268,78.77,0.0,Free - Local inference,11,1,12
+BART,facebook/bart-large-mnli,91.67,0.1369,75.23,0.0,Free - Local inference,11,1,12
+ModernBERT,tasksource/ModernBERT-base-nli,83.33,0.0977,41.82,0.0,Free - Local inference,10,2,12
